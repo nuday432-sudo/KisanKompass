@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KisanKompass - PolamVoice</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f1f8ed;
+    color: #263b29;
+}
+
+header {
+    background: linear-gradient(120deg, #14532d, #279447);
+    color: white;
+    padding: 25px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+header h1 {
+    font-size: 28px;
+}
+
+header p {
+    margin-top: 7px;
+    color: #e1f5df;
+}
+
+button, select {
+    cursor: pointer;
+}
+
+.lang-btn {
+    background: white;
+    color: #176b35;
+    border: none;
+    padding: 11px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.hero {
+    text-align: center;
+    padding: 35px 15px;
+}
+
+.hero h2 {
+    font-size: 30px;
+    color: #176b35;
+    margin-bottom: 12px;
+}
+
+.hero p {
+    color: #607460;
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.card {
+    background: white;
+    padding: 24px;
+    margin-bottom: 22px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px #00000012;
+}
+
+.card h2 {
+    color: #176b35;
+    margin-bottom: 18px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 18px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+select, input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #c9d9c7;
+    border-radius: 8px;
+    background: white;
+    font-size: 15px;
+}
+
+.main-btn {
+    background: #19823b;
+    color: white;
+    border: none;
+    padding: 13px 22px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 18px;
+}
+
+.main-btn:hover {
+    background: #105d29;
+}
+
+.voice-box {
+    text-align: center;
+    background: #e5f4e5;
+    padding: 25px;
+    border-radius: 12px;
+}
+
+.mic-btn {
+    background: #19823b;
+    color: white;
+    border: none;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    font-size: 30px;
+    margin: 15px;
+}
+
+#voiceStatus {
+    color: #176b35;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.result {
+    display: none;
+    border-left: 5px solid #19823b;
+    background: #f2faf0;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    line-height: 1.8;
+}
+
+.crop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 15px;
+}
+
+.crop {
+    padding: 18px;
+    background: #f1f8ed;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid #dcebd7;
+}
+
+.crop .emoji {
+    font-size: 38px;
+}
+
+.crop h3 {
+    color: #176b35;
+    margin: 10px 0;
+}
+
+.timeline {
+    border-left: 4px solid #279447;
+    padding-left: 20px;
+    margin-left: 12px;
+}
+
+.event {
+    position: relative;
+    padding: 0 0 23px 10px;
+}
+
+.event::before {
+    content: "";
+    position: absolute;
+    left: -37px;
+    top: 3px;
+    width: 14px;
+    height: 14px;
+    background: #279447;
+    border-radius: 50%;
+}
+
+.event h3 {
+    color: #176b35;
+}
+
+.recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 16px;
+}
+
+.recipe {
+    background: #f2faf0;
+    padding: 18px;
+    border-radius: 10px;
+    line-height: 1.7;
+}
+
+.recipe h3 {
+    color: #176b35;
+    margin-bottom: 8px;
+}
+
+footer {
+    background: #14532d;
+    color: white;
+    text-align: center;
+    padding: 22px;
+    margin-top: 30px;
+}
+
+.small {
+    font-size: 13px;
+    color: #667866;
+    margin-top: 10px;
+}
+
+@media(max-width:600px) {
+    header {
+        text-align: center;
+        justify-content: center;
+    }
+    .hero h2 {
+        font-size: 24px;
+    }
+    .card {
+        padding: 17px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <h1>🌾 KisanKompass</h1>
+        <p>PolamVoice - Smart Farming Advisory</p>
+    </div>
+    <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">
+        తెలుగు
+    </button>
+</header>
+
+<section class="hero">
+    <h2 id="heroTitle">Your Smart Farming Assistant</h2>
+    <p id="heroDesc">
+        Get crop suggestions, farming guidance and organic fertilizer tips
+        through your own language.
+    </p>
+</section>
+
+<div class="container">
+
+    <!-- VOICE INPUT -->
+    <div class="card">
+        <h2 id="voiceTitle">🎤 Voice Assistant</h2>
+
+        <div class="voice-box">
+            <p id="voiceText">
+                Click the microphone and tell us about your soil and season.
+            </p>
+
+            <button class="mic-btn" onclick="startVoice()">🎙️</button>
+
+            <p id="voiceStatus">Microphone is ready</p>
+            <p id="recognized"></p>
+            <p class="small" id="voiceExample">
+                Example: Nalla Regada nelalu, Kharif season
+            </p>
+        </div>
+    </div>
+
+    <!-- FARM DETAILS -->
+    <div class="card">
+        <h2 id="formTitle">🌱 Enter Your Farm Details</h2>
+
+        <div class="form-grid">
+
+            <div>
+                <label id="soilLabel" for="soil">Soil Type</label>
+                <select id="soil">
+                    <option value="black">Black Cotton Soil</option>
+                    <option value="red">Red Loamy Soil</option>
+                    <option value="sandy">Sandy Soil</option>
+                </select>
+            </div>
+
+            <div>
+                <label id="seasonLabel" for="season">Farming Season</label>
+                <select id="season">
+                    <option value="kharif">Kharif</option>
+                    <option value="rabi">Rabi</option>
+                    <option value="zaid">Zaid</option>
+                </select>
+            </div>
+
+            <div>
+                <label id="acreLabel" for="acres">Land (Acres)</label>
+                <input type="number" id="acres"
+                    min="0.1" max="10000" step="0.1"
+                    value="2">
+            </div>
+
+        </div>
+
+        <button class="main-btn" onclick="getAdvice()" id="adviceBtn">
+            Get Crop Recommendations
+        </button>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <!-- CROP RECOMMENDATIONS -->
+    <div class="card" id="cropSection" style="display:none">
+        <h2 id="cropTitle">🌾 Recommended Crops</h2>
+        <div class="crop-grid" id="cropList"></div>
+    </div>
+
+    <!-- CROP CALENDAR -->
+    <div class="card">
+        <h2 id="calendarTitle">📅 Crop Cultivation Calendar</h2>
+        <div class="timeline" id="calendar">
+            <div class="event">
+                <h3>Week 1-2: Land Preparation</h3>
+                <p>Prepare the soil and remove weeds.</p>
+            </div>
+            <div class="event">
+                <h3>Week 3-4: Sowing</h3>
+                <p>Sow seeds according to the crop requirements.</p>
+            </div>
+            <div class="event">
+                <h3>Week 5-8: Crop Maintenance</h3>
+                <p>Monitor weeds, pests and crop growth.</p>
+            </div>
+            <div class="event">
+                <h3>Harvesting</h3>
+                <p>Harvest based on crop maturity.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ORGANIC FERTILIZER -->
+    <div class="card">
+        <h2 id="fertTitle">🍃 Organic Fertilizer Guide</h2>
+
+        <div class="recipe-grid">
+
+            <div class="recipe">
+                <h3>🌿 Compost Manure</h3>
+                <p>
+                    <b>Materials:</b> Dry leaves, crop residues,
+                    animal manure and water.
+                </p>
+                <p>
+                    <b>Method:</b> Layer the materials, maintain moisture,
+                    and allow them to decompose before using.
+                </p>
+            </div>
+
+            <div class="recipe">
+                <h3>🍀 Neem-Based Pest Repellent</h3>
+                <p>
+                    <b>Materials:</b> Neem seed kernel extract and water.
+                </p>
+                <p>
+                    <b>Method:</b> Prepare a properly filtered neem extract
+                    and use an agriculture-approved application rate.
+                </p>
+            </div>
+
+            <div class="recipe">
+                <h3>🌱 Vermicompost</h3>
+                <p>
+                    <b>Materials:</b> Partially decomposed organic matter
+                    and suitable earthworms.
+                </p>
+                <p>
+                    <b>Method:</b> Maintain a shaded, moist bed and allow
+                    earthworms to convert organic waste into manure.
+                </p>
+            </div>
+
+        </div>
+        <p class="small">
+            Demo educational recipes. Confirm crop suitability and
+            application rates with a local agricultural officer.
+        </p>
+    </div>
+
+    <!-- PEST DIAGNOSIS -->
+    <div class="card">
+        <h2 id="pestTitle">🐛 Pest Symptom Assistant</h2>
+
+        <label for="symptom" id="symptomLabel">Select a symptom</label>
+
+        <select id="symptom">
+            <option value="yellow">Yellow Leaves</option>
+            <option value="borer">Stem Borer</option>
+            <option value="spots">Leaf Spots</option>
+        </select>
+
+        <button class="main-btn" onclick="diagnose()" id="diagnoseBtn">
+            Check Symptom
+        </button>
+
+        <div class="result" id="pestResult"></div>
+    </div>
+
+</div>
+
+<footer>
+    <h3>🌾 KisanKompass - PolamVoice</h3>
+    <p>Technology for Farmers | Smart Farming | Better Future</p>
+    <p class="small">
+        Educational demonstration only. Verify crop and pest advice
+        with local agricultural experts.
+    </p>
+</footer>
+
+<script>
+
+let language = "en";
+
+const translations = {
+    en: {
+        hero: "Your Smart Farming Assistant",
+        desc: "Get crop suggestions, farming guidance and organic fertilizer tips through your own language.",
+        voice: "🎤 Voice Assistant",
+        voiceText: "Click the microphone and tell us about your soil and season.",
+        ready: "Microphone is ready",
+        form: "🌱 Enter Your Farm Details",
+        soil: "Soil Type",
+        season: "Farming Season",
+        acres: "Land (Acres)",
+        advice: "Get Crop Recommendations",
+        crop: "🌾 Recommended Crops",
+        calendar: "📅 Crop Cultivation Calendar",
+        fertilizer: "🍃 Organic Fertilizer Guide",
+        pest: "🐛 Pest Symptom Assistant",
+        symptom: "Select a symptom",
+        diagnose: "Check Symptom",
+        result: "Recommended crops based on your selected soil and season:",
+        noData: "No sample recommendation is available for this combination. Please consult your local agriculture officer.",
+        acreage: "Your selected land area is",
+        acresWord: "acres.",
+        read: "🔊 Listen to Advice",
+        stop: "Stop Speaking",
+        crops: {
+            Cotton: "Cotton",
+            Soybean: "Soybean",
+            "Red Gram": "Red Gram",
+            Paddy: "Paddy",
+            Groundnut: "Groundnut",
+            Chillies: "Chillies"
+        }
+    },
+    te: {
+        hero: "మీ స్మార్ట్ వ్యవసాయ సహాయకుడు",
+        desc: "మీ భాషలో పంటల సూచనలు మరియు వ్యవసాయ సలహాలను పొందండి.",
+        voice: "🎤 వాయిస్ సహాయకుడు",
+        voiceText: "మైక్రోఫోన్ నొక్కి మీ నేల మరియు సీజన్ గురించి చెప్పండి.",
+        ready: "మైక్రోఫోన్ సిద్ధంగా ఉంది",
+        form: "🌱 మీ పొలం వివరాలు నమోదు చేయండి",
+        soil: "నేల రకం",
+        season: "వ్యవసాయ సీజన్",
+        acres: "భూమి (ఎకరాలు)",
+        advice: "పంటల సూచనలు పొందండి",
+        crop: "🌾 సిఫార్సు చేసిన పంటలు",
+        calendar: "📅 పంట సాగు క్యాలెండర్",
+        fertilizer: "🍃 సేంద్రియ ఎరువుల సమాచారం",
+        pest: "🐛 చీడపీడల లక్షణాలు",
+        symptom: "లక్షణాన్ని ఎంచుకోండి",
+        diagnose: "లక్షణాన్ని పరిశీలించండి",
+        result: "మీరు ఎంచుకున్న నేల మరియు సీజన్ ఆధారంగా పంటలు:",
+        noData: "ఈ కలయికకు నమూనా సిఫార్సు లేదు. స్థానిక వ్యవసాయ అధికారిని సంప్రదించండి.",
+        acreage: "మీరు ఎంచుకున్న భూమి విస్తీర్ణం",
+        acresWord: "ఎకరాలు.",
+        read: "🔊 సలహా వినండి",
+        stop: "ఆపండి",
+        crops: {
+            Cotton: "పత్తి",
+            Soybean: "సోయాబీన్",
+            "Red Gram": "కందులు",
+            Paddy: "వరి",
+            Groundnut: "వేరుశనగ",
+            Chillies: "మిరప"
+        }
+    }
+};
+
+const cropData = {
+    black: {
+        kharif: ["Cotton", "Soybean", "Red Gram"],
+        rabi: ["Red Gram"],
+        zaid: []
+    },
+    red: {
+        kharif: ["Groundnut", "Red Gram", "Chillies"],
+        rabi: ["Groundnut", "Chillies"],
+        zaid: []
+    },
+    sandy: {
+        kharif: ["Groundnut"],
+        rabi: ["Groundnut"],
+        zaid: []
+    }
+};
+
+const cropEmoji = {
+    Cotton: "☁️",
+    Soybean: "🌱",
+    "Red Gram": "🫘",
+    Paddy: "🌾",
+    Groundnut: "🥜",
+    Chillies: "🌶️"
+};
+
+function toggleLanguage() {
+    language = language === "en" ? "te" : "en";
+    const t = translations[language];
+
+    document.getElementById("langBtn").innerText =
+        language === "en" ? "తెలుగు" : "English";
+
+    document.getElementById("heroTitle").innerText = t.hero;
+    document.getElementById("heroDesc").innerText = t.desc;
+    document.getElementById("voiceTitle").innerText = t.voice;
+    document.getElementById("voiceText").innerText = t.voiceText;
+    document.getElementById("voiceStatus").innerText = t.ready;
+    document.getElementById("formTitle").innerText = t.form;
+    document.getElementById("soilLabel").innerText = t.soil;
+    document.getElementById("seasonLabel").innerText = t.season;
+    document.getElementById("acreLabel").innerText = t.acres;
+    document.getElementById("adviceBtn").innerText = t.advice;
+    document.getElementById("cropTitle").innerText = t.crop;
+    document.getElementById("calendarTitle").innerText = t.calendar;
+    document.getElementById("fertTitle").innerText = t.fertilizer;
+    document.getElementById("pestTitle").innerText = t.pest;
+    document.getElementById("symptomLabel").innerText = t.symptom;
+    document.getElementById("diagnoseBtn").innerText = t.diagnose;
+
+    const soilOptions = document.querySelectorAll("#soil option");
+    const seasonOptions = document.querySelectorAll("#season option");
+
+    if (language === "te") {
+        soilOptions[0].text = "నల్ల రేగడి నేల";
+        soilOptions[1].text = "ఎర్ర లోమీ నేల";
+        soilOptions[2].text = "ఇసుక నేల";
+
+        seasonOptions[0].text = "ఖరీఫ్";
+        seasonOptions[1].text = "రబీ";
+        seasonOptions[2].text = "జైద్";
+    } else {
+        soilOptions[0].text = "Black Cotton Soil";
+        soilOptions[1].text = "Red Loamy Soil";
+        soilOptions[2].text = "Sandy Soil";
+
+        seasonOptions[0].text = "Kharif";
+        seasonOptions[1].text = "Rabi";
+        seasonOptions[2].text = "Zaid";
+    }
+
+    if (document.getElementById("result").style.display === "block") {
+        getAdvice();
+    }
+}
+
+function startVoice() {
+    const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        document.getElementById("voiceStatus").innerText =
+            "Speech recognition is not supported. Please use the dropdowns.";
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = language === "te" ? "te-IN" : "en-IN";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    document.getElementById("voiceStatus").innerText =
+        language === "te" ? "వింటున్నాను..." : "Listening...";
+
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript.toLowerCase();
+
+        document.getElementById("recognized").innerText =
+            "You said: " + transcript;
+
+        if (/nalla|black|నల్ల|రేగడి/.test(transcript)) {
+            document.getElementById("soil").value = "black";
+        } else if (/erra|red|ఎర్ర/.test(transcript)) {
+            document.getElementById("soil").value = "red";
+        } else if (/sandy|sand|ఇసుక/.test(transcript)) {
+            document.getElementById("soil").value = "sandy";
+        }
+
+        if (/kharif|ఖరీఫ్/.test(transcript)) {
+            document.getElementById("season").value = "kharif";
+        } else if (/rabi|రబీ/.test(transcript)) {
+            document.getElementById("season").value = "rabi";
+        } else if (/zaid|జైద్/.test(transcript)) {
+            document.getElementById("season").value = "zaid";
+        }
+
+        const acreMatch = transcript.match(/(\d+(?:\.\d+)?)/);
+        if (acreMatch && /acre|ఎకర/.test(transcript)) {
+            document.getElementById("acres").value = acreMatch[1];
+        }
+
+        document.getElementById("voiceStatus").innerText =
+            language === "te" ? "వాయిస్ గుర్తించబడింది!" : "Voice recognized!";
+
+        getAdvice();
+    };
+
+    recognition.onerror = function(event) {
+        document.getElementById("voiceStatus").innerText =
+            "Microphone error: " + event.error;
+    };
+
+    recognition.onend = function() {
+        if (document.getElementById("voiceStatus").innerText.includes("Listening")) {
+            document.getElementById("voiceStatus").innerText =
+                translations[language].ready;
+        }
+    };
+
+    recognition.start();
+}
+
+function getAdvice() {
+    const soil = document.getElementById("soil").value;
+    const season = document.getElementById("season").value;
+    const acres = Number(document.getElementById("acres").value);
+
+    if (!Number.isFinite(acres) || acres <= 0) {
+        alert("Please enter a valid land area.");
+        return;
+    }
+
+    const crops = cropData[soil][season];
+    const t = translations[language];
+
+    const result = document.getElementById("result");
+    result.style.display = "block";
+
+    let soilName = document.getElementById("soil").selectedOptions[0].text;
+    let seasonName = document.getElementById("season").selectedOptions[0].text;
+
+    result.innerHTML = `
+        <h3>${t.result}</h3>
+        <p><b>${soilName}</b> | <b>${seasonName}</b></p>
+        <p>${t.acreage} ${acres} ${t.acresWord}</p>
+        <p>${crops.length ? crops.map(c => t.crops[c]).join(", ") : t.noData}</p>
+        <button class="main-btn" onclick="speakAdvice()">${t.read}</button>
+        <button class="main-btn" onclick="stopSpeaking()">${t.stop}</button>
+    `;
+
+    const cropSection = document.getElementById("cropSection");
+    const cropList = document.getElementById("cropList");
+
+    cropSection.style.display = crops.length ? "block" : "none";
+
+    cropList.innerHTML = "";
+
+    crops.forEach(crop => {
+        cropList.innerHTML += `
+            <div class="crop">
+                <div class="emoji">${cropEmoji[crop]}</div>
+                <h3>${t.crops[crop]}</h3>
+                <p>${language === "te" ?
+                    "నమూనా పంట సూచన" : "Sample crop suggestion"}</p>
+            </div>
+        `;
+    });
+
+    updateCalendar(crops[0] || "Crop");
+}
+
+function speakAdvice() {
+    if (!("speechSynthesis" in window)) {
+        alert("Text-to-speech is not supported in this browser.");
+        return;
+    }
+
+    const soil = document.getElementById("soil").selectedOptions[0].text;
+    const season = document.getElementById("season").selectedOptions[0].text;
+    const crops = cropData[
+        document.getElementById("soil").value
+    ][document.getElementById("season").value];
+
+    let message;
+
+    if (language === "te") {
+        message = crops.length
+            ? `మీ నేల ${soil}. మీ సీజన్ ${season}. సూచించిన పంటలు ${crops.map(c => translations.te.crops[c]).join(", ")}. విత్తే ముందు స్థానిక వ్యవసాయ అధికారిని సంప్రదించండి.`
+            : "ఈ కలయికకు నమూనా సిఫార్సు లేదు. స్థానిక వ్యవసాయ అధికారిని సంప్రదించండి.";
+    } else {
+        message = crops.length
+            ? `Your soil is ${soil}. Your season is ${season}. Suggested crops are ${crops.join(", ")}. Please consult your local agriculture officer before sowing.`
+            : translations.en.noData;
+    }
+
+    const speech = new SpeechSynthesisUtterance(message);
+    speech.lang = language === "te" ? "te-IN" : "en-IN";
+    speech.rate = 0.85;
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(speech);
+}
+
+function stopSpeaking() {
+    if ("speechSynthesis" in window) {
+        speechSynthesis.cancel();
+    }
+}
+
+function updateCalendar(crop) {
+    const t = language === "te";
+
+    const events = t ? [
+        ["1-2 వారాలు: భూమి తయారీ", "పొలాన్ని సిద్ధం చేసి కలుపు మొక్కలను తొలగించండి."],
+        ["3-4 వారాలు: విత్తడం", "పంట అవసరాలకు అనుగుణంగా విత్తనాలు వేయండి."],
+        ["5-8 వారాలు: పంట సంరక్షణ", "కలుపు, చీడపీడలు మరియు పంట ఎదుగుదలను గమనించండి."],
+        ["పంట పరిపక్వత: కోత", "పంట పరిపక్వతను బట్టి కోత కోయండి."]
+    ] : [
+        ["Week 1-2: Land Preparation", "Prepare the field and remove weeds."],
+        ["Week 3-4: Sowing", "Sow seeds according to crop requirements."],
+        ["Week 5-8: Crop Maintenance", "Monitor weeds, pests and crop growth."],
+        ["Maturity: Harvesting", "Harvest based on crop maturity."]
+    ];
+
+    document.getElementById("calendar").innerHTML =
+        events.map(e => `
+            <div class="event">
+                <h3>${e[0]}</h3>
+                <p>${e[1]}</p>
+            </div>
+        `).join("");
+}
+
+function diagnose() {
+    const symptom = document.getElementById("symptom").value;
+    const box = document.getElementById("pestResult");
+
+    const data = {
+        yellow: {
+            en: "Yellow leaves can be caused by nutrient deficiency, water stress or disease. Inspect the crop and soil before treatment.",
+            te: "ఆకులు పసుపు రంగులోకి మారడం పోషక లోపం, నీటి ఒత్తిడి లేదా వ్యాధి వల్ల కావచ్చు. చికిత్సకు ముందు పంటను పరిశీలించండి."
+        },
+        borer: {
+            en: "Stem borer damage may appear as dead hearts or holes in stems. Inspect affected plants and consult an agricultural officer for control measures.",
+            te: "కాండం తొలిచే పురుగు వల్ల మొక్క మధ్య భాగం ఎండిపోవచ్చు లేదా కాండంలో రంధ్రాలు ఏర్పడవచ్చు. వ్యవసాయ అధికారిని సంప్రదించండి."
+        },
+        spots: {
+            en: "Leaf spots may be caused by fungal or bacterial diseases. Identify the cause before choosing a treatment.",
+            te: "ఆకులపై మచ్చలు శిలీంధ్ర లేదా బ్యాక్టీరియా వ్యాధుల వల్ల రావచ్చు. చికిత్సకు ముందు కారణాన్ని గుర్తించండి."
+        }
+    };
+
+    box.style.display = "block";
+    box.innerText = data[symptom][language];
+}
+
+</script>
+
+</body>
+</html>
